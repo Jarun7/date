@@ -88,9 +88,10 @@
       if (attempts < maxAttempts) {
         question.innerText = questions[attempts];
       } else {
-        question.innerText = "No worries. I respect your decision. 😊";
+        question.innerText = "You have no choice 😏❤️";
         document.querySelector('.yes-btn').style.display = 'none';
         document.querySelector('.no-btn').style.display = 'none';
+        launchConfetti();
       }
     }
 
