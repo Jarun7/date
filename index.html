@@ -2,143 +2,89 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Date Proposal</title>
+  <title>Valentine’s Comic Con?</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
       height: 100vh;
-      margin: 0;
-      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #ff416c, #ff4b2b);
+      font-family: Arial, sans-serif;
+      color: #fff;
       overflow: hidden;
     }
 
-    #question {
-      font-size: 2em;
-      margin-bottom: 30px;
+    .card {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 30px 40px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
     }
 
-    .btn {
-      padding: 15px 30px;
-      margin: 10px;
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    p {
+      margin-bottom: 25px;
+      font-size: 18px;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 18px;
       border: none;
       border-radius: 10px;
-      font-size: 1.2em;
       cursor: pointer;
-      transition: transform 0.2s;
+      margin: 0 10px;
+      transition: 0.2s ease;
     }
 
-    .yes-btn {
-      background-color: #28a745;
-      color: white;
-      font-size: 2em;
-      transform: scale(1.5);
+    #yesBtn {
+      background: #00e676;
+      color: #000;
     }
 
-    .no-btn {
-      background-color: #dc3545;
-      color: white;
-      font-size: 0.8em;
-      transform: scale(0.8);
-    }
-
-    #confetti {
+    #noBtn {
+      background: #ff1744;
+      color: #fff;
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 999;
     }
   </style>
 </head>
 <body>
 
-  <div id="question">Will you go on a date with me? 😊</div>
-  <button class="btn yes-btn" onclick="celebrate()">Yes</button>
-  <button class="btn no-btn" onclick="nextAttempt()">No</button>
+  <div class="card">
+    <h1>Hey 👀</h1>
+    <p>
+      Will you go to <strong>Comic Con</strong> with me on <strong>Valentine’s Day</strong>? 💖🎭
+    </p>
 
-  <canvas id="confetti"></canvas>
+    <button id="yesBtn">YES 😍</button>
+    <button id="noBtn">NO 🙃</button>
+  </div>
 
   <script>
-    let attempts = 0;
-    const maxAttempts = 10;
-    const question = document.getElementById("question");
-    const questions = [
-      "Will you go on a date with me? 😊",
-      "Are you sure? I’d really like to take you out. 🌹",
-      "Just once? Promise to make it special. 💫",
-      "I might cry a little if you say no again... 😢",
-      "Please? Just one chance? 🙏",
-      "Okay... Maybe we can go for coffee? ☕",
-      "Or just a walk in the park? 🍃",
-      "You’re amazing. I’d love to spend time with you. 🌟",
-      "Pretty please? I’ll bring flowers! 💐",
-      "Last try... Will you go on a date with me? ❤️"
-    ];
+    const noBtn = document.getElementById("noBtn");
 
-    function nextAttempt() {
-      attempts++;
-      if (attempts < maxAttempts) {
-        question.innerText = questions[attempts];
-      } else {
-        question.innerText = "You have no choice 😏❤️";
-        document.querySelector('.yes-btn').style.display = 'none';
-        document.querySelector('.no-btn').style.display = 'none';
-        launchConfetti();
-      }
+    function moveButton() {
+      const padding = 50;
+      const x = Math.random() * (window.innerWidth - padding);
+      const y = Math.random() * (window.innerHeight - padding);
+
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top = `${y}px`;
     }
 
-    function celebrate() {
-      question.innerText = "Yay! I’m so excited! 💖";
-      document.querySelector('.yes-btn').style.display = 'none';
-      document.querySelector('.no-btn').style.display = 'none';
-      launchConfetti();
-    }
+    noBtn.addEventListener("mouseover", moveButton);
+    noBtn.addEventListener("touchstart", moveButton);
 
-    // Confetti animation
-    function launchConfetti() {
-      const canvas = document.getElementById('confetti');
-      const ctx = canvas.getContext('2d');
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-
-      const pieces = [];
-      const numberOfPieces = 200;
-
-      for (let i = 0; i < numberOfPieces; i++) {
-        pieces.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height - canvas.height,
-          size: Math.random() * 10 + 5,
-          speed: Math.random() * 3 + 2,
-          color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-          angle: Math.random() * 2 * Math.PI
-        });
-      }
-
-      function update() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for (let piece of pieces) {
-          piece.y += piece.speed;
-          piece.angle += 0.01;
-          piece.x += Math.sin(piece.angle);
-          ctx.fillStyle = piece.color;
-          ctx.beginPath();
-          ctx.arc(piece.x, piece.y, piece.size, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        requestAnimationFrame(update);
-      }
-
-      update();
-    }
+    document.getElementById("yesBtn").addEventListener("click", () => {
+      alert("YES?! 😍🔥 Comic Con Valentine confirmed!");
+    });
   </script>
+
 </body>
 </html>
