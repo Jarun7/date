@@ -1,83 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Valentine</title>
 
 <style>
-:root {
-  --accent:#ff4ecd;
-  --accent2:#6cf2ff;
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  height: 100vh;
+  background: radial-gradient(circle at top, #1b1b2f, #050510 70%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: system-ui;
+  overflow: hidden;
+  color: #fff;
 }
 
-* { box-sizing:border-box; }
-
-body{
-  margin:0;
-  height:100vh;
-  background:radial-gradient(circle at top,#1b1b2f,#050510 70%);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-family:system-ui;
-  overflow:hidden;
-  color:#fff;
+/* HARD BOUNDARY */
+.fly-zone {
+  position: fixed;
+  inset: 15%;
+  border-radius: 32px;
+  border: 2px dashed rgba(255,255,255,0.25);
+  box-shadow: inset 0 0 40px rgba(108,242,255,0.12);
+  pointer-events: none;
+  z-index: 1;
 }
 
-.card{
-  padding:48px;
-  width:420px;
-  border-radius:28px;
-  background:rgba(255,255,255,.08);
-  backdrop-filter:blur(30px);
-  text-align:center;
-  z-index:2;
+.card {
+  width: 420px;
+  padding: 48px;
+  border-radius: 28px;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(30px);
+  text-align: center;
+  z-index: 2;
 }
 
-h1{
-  margin:0 0 12px;
-  background:linear-gradient(135deg,#fff,var(--accent2));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
+h1 {
+  margin: 0 0 12px;
+  background: linear-gradient(135deg, #fff, #6cf2ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-p{ opacity:.9; margin-bottom:40px; }
-
-.buttons{
-  display:flex;
-  gap:20px;
-  justify-content:center;
+p {
+  opacity: 0.9;
+  margin-bottom: 40px;
 }
 
-button{
-  padding:16px 36px;
-  border-radius:16px;
-  border:none;
-  font-size:17px;
-  font-weight:600;
-  cursor:pointer;
+.buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
 }
 
-#yes{
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  color:#000;
+button {
+  padding: 16px 36px;
+  border-radius: 16px;
+  border: none;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
-#no{
-  background:rgba(255,255,255,.15);
-  color:#fff;
-  border:1px solid rgba(255,255,255,.25);
-  position:fixed;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  z-index:9999;
+#yes {
+  background: linear-gradient(135deg, #ff4ecd, #6cf2ff);
+  color: #000;
+}
+
+#no {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.25);
+  position: fixed;
+  z-index: 9999;
 }
 </style>
 </head>
 
 <body>
+
+<div class="fly-zone" id="zone"></div>
 
 <div class="card">
   <h1>💝 Valentine’s Day</h1>
@@ -91,73 +99,84 @@ button{
 <script>
 const noBtn = document.getElementById("no");
 const yesBtn = document.getElementById("yes");
+const zone = document.getElementById("zone");
 
-const EDGE = 24;        // absolute safety margin
-const ESCAPE_RADIUS = 160;
+const ESCAPE_DISTANCE = 140;
 
-function viewport() {
-  return window.visualViewport || {
-    width: window.innerWidth,
-    height: window.innerHeight
-  };
+/* Utility */
+function clamp(v, min, max) {
+  return Math.max(min, Math.min(max, v));
 }
 
-function clamp(val,min,max){
-  return Math.max(min,Math.min(max,val));
+/* Get fly-zone bounds */
+function zoneBounds() {
+  return zone.getBoundingClientRect();
 }
 
+/* Move NO button strictly inside fly-zone */
 function fly() {
-  const vp = viewport();
-  const r = noBtn.getBoundingClientRect();
+  const zb = zoneBounds();
+  const br = noBtn.getBoundingClientRect();
 
-  const maxX = vp.width - r.width - EDGE;
-  const maxY = vp.height - r.height - EDGE;
+  const minX = zb.left;
+  const maxX = zb.right - br.width;
+  const minY = zb.top;
+  const maxY = zb.bottom - br.height;
 
-  let x = Math.random() * maxX;
-  let y = Math.random() * maxY;
+  const x = clamp(
+    minX + Math.random() * (maxX - minX),
+    minX,
+    maxX
+  );
 
-  x = clamp(x, EDGE, maxX);
-  y = clamp(y, EDGE, maxY);
+  const y = clamp(
+    minY + Math.random() * (maxY - minY),
+    minY,
+    maxY
+  );
 
   noBtn.style.left = x + "px";
-  noBtn.style.top  = y + "px";
-  noBtn.style.transform = "none";
+  noBtn.style.top = y + "px";
 }
 
-/* cursor proximity logic */
+/* Cursor proximity detection */
 document.addEventListener("mousemove", e => {
   const r = noBtn.getBoundingClientRect();
-  const dx = e.clientX - (r.left + r.width/2);
-  const dy = e.clientY - (r.top + r.height/2);
-  if (Math.hypot(dx,dy) < ESCAPE_RADIUS) fly();
-});
+  const dx = e.clientX - (r.left + r.width / 2);
+  const dy = e.clientY - (r.top + r.height / 2);
 
-/* touch + hover safety */
-["mouseenter","mousedown","touchstart","click"].forEach(evt=>{
-  noBtn.addEventListener(evt,e=>{
-    e.preventDefault();
+  if (Math.hypot(dx, dy) < ESCAPE_DISTANCE) {
     fly();
-  });
+  }
 });
 
-/* FINAL GUARANTEE LOOP — cannot escape viewport */
-function enforceBounds(){
-  const vp = viewport();
+/* Absolute enforcement — cannot cross border */
+function enforceZone() {
+  const zb = zoneBounds();
   const r = noBtn.getBoundingClientRect();
 
   let x = r.left;
   let y = r.top;
 
-  x = clamp(x, EDGE, vp.width - r.width - EDGE);
-  y = clamp(y, EDGE, vp.height - r.height - EDGE);
+  x = clamp(x, zb.left, zb.right - r.width);
+  y = clamp(y, zb.top, zb.bottom - r.height);
 
   noBtn.style.left = x + "px";
-  noBtn.style.top  = y + "px";
-  requestAnimationFrame(enforceBounds);
-}
-enforceBounds();
+  noBtn.style.top = y + "px";
 
-/* YES */
+  requestAnimationFrame(enforceZone);
+}
+enforceZone();
+
+/* Block all attempts to click */
+["mouseenter","mousedown","click","touchstart"].forEach(evt => {
+  noBtn.addEventListener(evt, e => {
+    e.preventDefault();
+    fly();
+  });
+});
+
+/* YES logic */
 yesBtn.onclick = () => {
   noBtn.remove();
   yesBtn.textContent = "✓ Confirmed!";
