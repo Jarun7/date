@@ -26,7 +26,7 @@ body {
   color: #fff;
 }
 
-/* Glow */
+/* Ambient glow */
 .glow {
   position: absolute;
   width: 600px;
@@ -46,13 +46,18 @@ body {
   z-index: 2;
   width: 90%;
   max-width: 420px;
-  padding: 40px 32px;
+  padding: 40px 32px 48px;
   background: var(--glass);
   backdrop-filter: blur(20px);
   border-radius: 24px;
   border: 1px solid rgba(255,255,255,0.15);
   box-shadow: 0 30px 80px rgba(0,0,0,0.6);
   text-align: center;
+  transition: box-shadow 0.6s ease;
+}
+
+.card.success {
+  box-shadow: 0 0 120px rgba(255,78,205,0.35);
 }
 
 h1 {
@@ -121,14 +126,27 @@ button {
   to { transform: rotate(-20deg); }
 }
 
-/* Success */
-.success {
-  animation: pop 0.6s ease forwards;
+/* Yay text */
+.yay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.6);
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  opacity: 0;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: yayPop 1.2s ease forwards;
+  pointer-events: none;
 }
-@keyframes pop {
-  0% { transform: scale(1); }
-  60% { transform: scale(1.08); }
-  100% { transform: scale(1); }
+
+@keyframes yayPop {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+  60% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
 /* Hearts */
@@ -136,10 +154,24 @@ button {
   position: absolute;
   color: #ff4ecd;
   animation: floatUp 3s ease-out forwards;
+  pointer-events: none;
 }
 @keyframes floatUp {
   from { transform: translateY(0) scale(0.8); opacity: 1; }
-  to { transform: translateY(-120px) scale(1.3); opacity: 0; }
+  to { transform: translateY(-140px) scale(1.4); opacity: 0; }
+}
+
+/* Confetti dots */
+.confetti {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: confettiFall 2.5s ease-out forwards;
+}
+@keyframes confettiFall {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(300px); opacity: 0; }
 }
 </style>
 </head>
@@ -163,36 +195,51 @@ const noBtn = document.getElementById("noBtn");
 const yesBtn = document.getElementById("yesBtn");
 const card = document.getElementById("card");
 
-/* Make NO uncatchable */
+/* NO escapes forever */
 function escape() {
-  const padding = 40;
-  const x = Math.random() * (window.innerWidth - padding);
-  const y = Math.random() * (window.innerHeight - padding);
+  const x = Math.random() * (window.innerWidth - 80);
+  const y = Math.random() * (window.innerHeight - 80);
   noBtn.style.left = `${x}px`;
   noBtn.style.top = `${y}px`;
 }
-
-/* Triggers */
 noBtn.addEventListener("mouseenter", escape);
 noBtn.addEventListener("mousedown", escape);
 noBtn.addEventListener("touchstart", escape);
 
-/* YES action */
+/* YES celebration */
 yesBtn.addEventListener("click", () => {
   card.classList.add("success");
   yesBtn.textContent = "Confirmed";
   yesBtn.disabled = true;
   noBtn.style.display = "none";
 
-  for (let i = 0; i < 18; i++) {
+  // Yay text
+  const yay = document.createElement("div");
+  yay.className = "yay";
+  yay.textContent = "YAY!";
+  document.body.appendChild(yay);
+
+  // Hearts
+  for (let i = 0; i < 14; i++) {
     const heart = document.createElement("div");
     heart.className = "heart";
     heart.textContent = "❤";
     heart.style.left = Math.random() * 100 + "%";
     heart.style.bottom = "20px";
-    heart.style.fontSize = 14 + Math.random() * 22 + "px";
+    heart.style.fontSize = 16 + Math.random() * 22 + "px";
     document.body.appendChild(heart);
     setTimeout(() => heart.remove(), 3000);
+  }
+
+  // Confetti
+  for (let i = 0; i < 30; i++) {
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = Math.random() * 100 + "%";
+    c.style.top = "0px";
+    c.style.background = Math.random() > 0.5 ? "#ff4ecd" : "#6cf2ff";
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 2500);
   }
 });
 </script>
