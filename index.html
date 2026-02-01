@@ -1,228 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Valentine's Day</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine</title>
 
 <style>
 :root {
-  --accent: #ff4ecd;
-  --accent-2: #6cf2ff;
-  --glass: rgba(255,255,255,0.08);
+  --accent:#ff4ecd;
+  --accent2:#6cf2ff;
 }
 
-* { box-sizing: border-box; }
+* { box-sizing:border-box; }
 
-body {
-  margin: 0;
-  height: 100vh;
-  background: radial-gradient(circle at top, #1b1b2f, #050510 70%);
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  color: #fff;
+body{
+  margin:0;
+  height:100vh;
+  background:radial-gradient(circle at top,#1b1b2f,#050510 70%);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:system-ui;
+  overflow:hidden;
+  color:#fff;
 }
 
-/* Optional visible fly zone */
-.fly-zone {
-  position: fixed;
-  inset: 15%;
-  border-radius: 32px;
-  border: 1px dashed rgba(255,255,255,0.15);
-  box-shadow: inset 0 0 40px rgba(108,242,255,0.08);
-  pointer-events: none;
-  z-index: 1;
+.card{
+  padding:48px;
+  width:420px;
+  border-radius:28px;
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(30px);
+  text-align:center;
+  z-index:2;
 }
 
-.card {
-  z-index: 2;
-  width: 90%;
-  max-width: 440px;
-  padding: 48px 40px 56px;
-  background: var(--glass);
-  backdrop-filter: blur(30px);
-  border-radius: 28px;
-  border: 1px solid rgba(255,255,255,0.2);
-  text-align: center;
+h1{
+  margin:0 0 12px;
+  background:linear-gradient(135deg,#fff,var(--accent2));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
 }
 
-h1 {
-  margin-bottom: 16px;
-  font-size: 32px;
-  background: linear-gradient(135deg, #fff, var(--accent-2));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+p{ opacity:.9; margin-bottom:40px; }
+
+.buttons{
+  display:flex;
+  gap:20px;
+  justify-content:center;
 }
 
-p {
-  font-size: 18px;
-  margin-bottom: 40px;
-  opacity: 0.9;
+button{
+  padding:16px 36px;
+  border-radius:16px;
+  border:none;
+  font-size:17px;
+  font-weight:600;
+  cursor:pointer;
 }
 
-.buttons {
-  position: relative;
-  height: 80px;
-  display: flex;
-  gap: 20px;
-  justify-content: center;
+#yes{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#000;
 }
 
-button {
-  font-size: 17px;
-  font-weight: 600;
-  padding: 16px 36px;
-  border-radius: 16px;
-  border: none;
-  cursor: pointer;
-}
-
-#yesBtn {
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  color: #000;
-}
-
-#noBtn {
-  background: rgba(255,255,255,0.15);
-  color: #fff;
-  border: 1px solid rgba(255,255,255,0.25);
-  position: relative;
-  z-index: 9999;
-}
-
-#noBtn.detached {
-  position: fixed;
-}
-
-#noBtn.flying {
-  animation: bounce 0.6s ease-in-out infinite;
-}
-
-@keyframes bounce {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-/* Wings */
-.wings {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0;
-}
-
-.wings.show { opacity: 1; }
-
-.wing {
-  position: absolute;
-  font-size: 30px;
-  top: 50%;
-}
-
-.wing.left { left: -28px; transform: translateY(-50%); }
-.wing.right { right: -28px; transform: translateY(-50%) scaleX(-1); }
-
-.wings.show .wing {
-  animation: flap 0.25s ease-in-out infinite;
-}
-
-@keyframes flap {
-  0%,100% { transform: translateY(-50%) rotate(-15deg); }
-  50% { transform: translateY(-50%) rotate(-35deg); }
+#no{
+  background:rgba(255,255,255,.15);
+  color:#fff;
+  border:1px solid rgba(255,255,255,.25);
+  position:fixed;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  z-index:9999;
 }
 </style>
 </head>
 
 <body>
 
-<div class="fly-zone"></div>
-
-<div class="card" id="card">
-  <h1>💝 Valentine's Day 💝</h1>
+<div class="card">
+  <h1>💝 Valentine’s Day</h1>
   <p>Will you go on a Comic Con date with me?</p>
-
   <div class="buttons">
-    <button id="yesBtn">YES! 💕</button>
-
-    <button id="noBtn">
-      <div class="wings">
-        <span class="wing left">🦋</span>
-        <span class="wing right">🦋</span>
-      </div>
-      NO
-    </button>
+    <button id="yes">YES 💕</button>
+    <button id="no">NO</button>
   </div>
 </div>
 
 <script>
-const noBtn = document.getElementById("noBtn");
-const yesBtn = document.getElementById("yesBtn");
-const wings = document.querySelector(".wings");
+const noBtn = document.getElementById("no");
+const yesBtn = document.getElementById("yes");
 
-let detached = false;
+const EDGE = 24;        // absolute safety margin
+const ESCAPE_RADIUS = 160;
 
-/* Tight safe bounds */
-function getSafeBounds() {
-  const btnW = noBtn.offsetWidth;
-  const btnH = noBtn.offsetHeight;
-
-  const margin = 120;
-  const centerX = window.innerWidth / 2;
-  const centerY = window.innerHeight / 2;
-  const radius = Math.min(window.innerWidth, window.innerHeight) * 0.22;
-
-  return {
-    minX: Math.max(margin, centerX - radius),
-    maxX: Math.min(window.innerWidth - btnW - margin, centerX + radius),
-    minY: Math.max(margin, centerY - radius),
-    maxY: Math.min(window.innerHeight - btnH - margin, centerY + radius),
+function viewport() {
+  return window.visualViewport || {
+    width: window.innerWidth,
+    height: window.innerHeight
   };
 }
 
-function flyAway() {
-  if (!detached) {
-    const r = noBtn.getBoundingClientRect();
-    noBtn.classList.add("detached");
-    noBtn.style.left = r.left + "px";
-    noBtn.style.top = r.top + "px";
-    wings.classList.add("show");
-    detached = true;
-  }
-
-  const { minX, maxX, minY, maxY } = getSafeBounds();
-
-  let x = minX + Math.random() * (maxX - minX);
-  let y = minY + Math.random() * (maxY - minY);
-
-  /* HARD CLAMP – cannot leave screen */
-  x = Math.max(100, Math.min(window.innerWidth - noBtn.offsetWidth - 100, x));
-  y = Math.max(100, Math.min(window.innerHeight - noBtn.offsetHeight - 100, y));
-
-  noBtn.classList.add("flying");
-  noBtn.style.left = x + "px";
-  noBtn.style.top = y + "px";
+function clamp(val,min,max){
+  return Math.max(min,Math.min(max,val));
 }
 
-/* Mouse + touch evasion */
+function fly() {
+  const vp = viewport();
+  const r = noBtn.getBoundingClientRect();
+
+  const maxX = vp.width - r.width - EDGE;
+  const maxY = vp.height - r.height - EDGE;
+
+  let x = Math.random() * maxX;
+  let y = Math.random() * maxY;
+
+  x = clamp(x, EDGE, maxX);
+  y = clamp(y, EDGE, maxY);
+
+  noBtn.style.left = x + "px";
+  noBtn.style.top  = y + "px";
+  noBtn.style.transform = "none";
+}
+
+/* cursor proximity logic */
 document.addEventListener("mousemove", e => {
   const r = noBtn.getBoundingClientRect();
-  const dx = e.clientX - (r.left + r.width / 2);
-  const dy = e.clientY - (r.top + r.height / 2);
-  if (Math.hypot(dx, dy) < 140) flyAway();
+  const dx = e.clientX - (r.left + r.width/2);
+  const dy = e.clientY - (r.top + r.height/2);
+  if (Math.hypot(dx,dy) < ESCAPE_RADIUS) fly();
 });
 
-["mouseenter","mousedown","touchstart","click"].forEach(evt =>
-  noBtn.addEventListener(evt, e => {
+/* touch + hover safety */
+["mouseenter","mousedown","touchstart","click"].forEach(evt=>{
+  noBtn.addEventListener(evt,e=>{
     e.preventDefault();
-    flyAway();
-  })
-);
+    fly();
+  });
+});
 
+/* FINAL GUARANTEE LOOP — cannot escape viewport */
+function enforceBounds(){
+  const vp = viewport();
+  const r = noBtn.getBoundingClientRect();
+
+  let x = r.left;
+  let y = r.top;
+
+  x = clamp(x, EDGE, vp.width - r.width - EDGE);
+  y = clamp(y, EDGE, vp.height - r.height - EDGE);
+
+  noBtn.style.left = x + "px";
+  noBtn.style.top  = y + "px";
+  requestAnimationFrame(enforceBounds);
+}
+enforceBounds();
+
+/* YES */
 yesBtn.onclick = () => {
-  noBtn.style.display = "none";
+  noBtn.remove();
   yesBtn.textContent = "✓ Confirmed!";
   yesBtn.disabled = true;
 };
