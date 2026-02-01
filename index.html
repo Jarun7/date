@@ -79,6 +79,12 @@ button {
   border: 1px solid rgba(255,255,255,0.25);
   position: fixed;
   z-index: 9999;
+  /* Initial visibility fix */
+  visibility: hidden;
+}
+
+#no.visible {
+  visibility: visible;
 }
 </style>
 </head>
@@ -88,7 +94,7 @@ button {
 <div class="fly-zone" id="zone"></div>
 
 <div class="card">
-  <h1>💝 Valentine’s Day</h1>
+  <h1>💝 Valentine's Day</h1>
   <p>Will you go on a Comic Con date with me?</p>
   <div class="buttons">
     <button id="yes">YES 💕</button>
@@ -117,6 +123,10 @@ function zoneBounds() {
 /* INITIAL placement — CRITICAL */
 function placeInitially() {
   const zb = zoneBounds();
+  
+  // Get button dimensions (even though it's hidden)
+  noBtn.style.visibility = 'visible';
+  noBtn.style.opacity = '0';
   const br = noBtn.getBoundingClientRect();
 
   const x = zb.left + (zb.width - br.width) / 2;
@@ -124,6 +134,8 @@ function placeInitially() {
 
   noBtn.style.left = x + "px";
   noBtn.style.top = y + "px";
+  noBtn.style.opacity = '1';
+  noBtn.classList.add('visible');
 
   initialized = true;
 }
