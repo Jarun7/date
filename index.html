@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Valentine’s Day</title>
+<title>Valentine's Day</title>
 
 <style>
 :root {
@@ -24,154 +24,374 @@ body {
   justify-content: center;
   overflow: hidden;
   color: #fff;
+  position: relative;
+}
+
+/* Animated background particles */
+@keyframes float {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  33% { transform: translateY(-30px) translateX(20px); }
+  66% { transform: translateY(20px) translateX(-15px); }
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: radial-gradient(circle, var(--accent-2), transparent);
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: float 8s ease-in-out infinite;
+  filter: blur(1px);
 }
 
 /* Ambient glow */
 .glow {
   position: absolute;
-  width: 600px;
-  height: 600px;
+  width: 700px;
+  height: 700px;
   background: radial-gradient(circle, var(--accent), transparent 60%);
-  filter: blur(120px);
-  opacity: 0.25;
-  animation: float 8s ease-in-out infinite;
+  filter: blur(140px);
+  opacity: 0.3;
+  animation: pulse 6s ease-in-out infinite;
+  pointer-events: none;
 }
-@keyframes float {
-  0%,100% { transform: translateY(-40px); }
-  50% { transform: translateY(40px); }
+
+@keyframes pulse {
+  0%, 100% { 
+    transform: scale(1) translateY(-40px); 
+    opacity: 0.3;
+  }
+  50% { 
+    transform: scale(1.15) translateY(40px); 
+    opacity: 0.4;
+  }
+}
+
+.glow-2 {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, var(--accent-2), transparent 70%);
+  filter: blur(120px);
+  opacity: 0.2;
+  animation: pulse 8s ease-in-out infinite reverse;
+  pointer-events: none;
+  right: 10%;
+  bottom: 10%;
 }
 
 /* Card */
 .card {
   z-index: 2;
   width: 90%;
-  max-width: 420px;
-  padding: 40px 32px 48px;
+  max-width: 440px;
+  padding: 48px 40px 56px;
   background: var(--glass);
-  backdrop-filter: blur(20px);
-  border-radius: 24px;
-  border: 1px solid rgba(255,255,255,0.15);
-  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+  backdrop-filter: blur(30px);
+  border-radius: 28px;
+  border: 1px solid rgba(255,255,255,0.2);
+  box-shadow: 
+    0 40px 100px rgba(0,0,0,0.7),
+    inset 0 1px 0 rgba(255,255,255,0.1);
   text-align: center;
-  transition: box-shadow 0.6s ease;
+  transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border-radius: 28px;
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.8s ease;
+}
+
+.card.success::before {
+  opacity: 0.15;
 }
 
 .card.success {
-  box-shadow: 0 0 120px rgba(255,78,205,0.35);
+  box-shadow: 
+    0 0 150px rgba(255,78,205,0.4),
+    0 40px 100px rgba(0,0,0,0.7),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+  border-color: rgba(255,78,205,0.3);
 }
 
 h1 {
-  margin-bottom: 12px;
-  font-size: 26px;
+  margin: 0 0 16px 0;
+  font-size: 32px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #fff, var(--accent-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
 }
 
 p {
-  font-size: 17px;
-  margin-bottom: 32px;
+  font-size: 18px;
+  margin: 0 0 40px 0;
+  line-height: 1.6;
+  opacity: 0.9;
 }
 
-/* Buttons */
+/* Buttons container */
 .buttons {
   position: relative;
-  height: 70px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 button {
-  font-size: 16px;
-  padding: 14px 28px;
-  border-radius: 14px;
+  font-size: 17px;
+  font-weight: 600;
+  padding: 16px 36px;
+  border-radius: 16px;
   border: none;
-  transition: transform 0.25s ease;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  letter-spacing: 0.5px;
 }
 
 #yesBtn {
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
   color: #000;
-  font-weight: 600;
-  cursor: pointer;
+  box-shadow: 
+    0 8px 24px rgba(255,78,205,0.3),
+    0 2px 8px rgba(255,78,205,0.2);
+  position: relative;
+  z-index: 2;
 }
 
-#yesBtn:hover {
-  transform: scale(1.06);
+#yesBtn:hover:not(:disabled) {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 
+    0 12px 32px rgba(255,78,205,0.4),
+    0 4px 12px rgba(255,78,205,0.3);
 }
 
-/* NO button with legs */
+#yesBtn:active:not(:disabled) {
+  transform: translateY(-1px) scale(1.02);
+}
+
+#yesBtn:disabled {
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
+/* NO button with emoji wings */
 #noBtn {
-  position: absolute;
-  left: 180px;
+  position: fixed;
   background: rgba(255,255,255,0.15);
   color: #fff;
-  cursor: pointer;
-  padding-bottom: 26px;
+  border: 1px solid rgba(255,255,255,0.25);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  pointer-events: all;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 9999;
+  left: 60%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 16px 32px;
 }
 
-/* Legs */
-#noBtn::before,
-#noBtn::after {
-  content: "";
+#noBtn.flying {
+  transition: all 0.35s ease-out;
+  animation: bounce 0.6s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { 
+    transform: translateY(0);
+  }
+  50% { 
+    transform: translateY(-10px);
+  }
+}
+
+/* Button body/torso */
+#noBtn .button-body {
+  position: relative;
+  display: inline-block;
+  z-index: 2;
+}
+
+/* Wings container */
+.wings {
   position: absolute;
-  bottom: 4px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 140px;
+  height: 60px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Individual wings using emoji */
+.wing {
+  position: absolute;
+  font-size: 36px;
+  top: 50%;
+  transform-origin: center;
+  filter: drop-shadow(0 2px 8px rgba(255,78,205,0.4));
+  line-height: 1;
+}
+
+.wing.left {
+  left: -8px;
+  transform: translateY(-50%);
+  animation: flapLeft 0.25s ease-in-out infinite;
+}
+
+.wing.right {
+  right: -8px;
+  transform: translateY(-50%) scaleX(-1);
+  animation: flapRight 0.25s ease-in-out infinite;
+}
+
+@keyframes flapLeft {
+  0%, 100% { 
+    transform: translateY(-50%) rotate(-15deg);
+  }
+  50% { 
+    transform: translateY(-50%) rotate(-35deg);
+  }
+}
+
+@keyframes flapRight {
+  0%, 100% { 
+    transform: translateY(-50%) scaleX(-1) rotate(-15deg);
+  }
+  50% { 
+    transform: translateY(-50%) scaleX(-1) rotate(-35deg);
+  }
+}
+
+/* Dust cloud effect when running */
+.dust {
+  position: absolute;
   width: 6px;
-  height: 14px;
-  background: #fff;
-  border-radius: 3px;
-  animation: run 0.3s infinite alternate;
+  height: 6px;
+  background: rgba(255,255,255,0.4);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: dustFade 0.6s ease-out forwards;
 }
 
-#noBtn::before { left: 10px; }
-#noBtn::after { right: 10px; animation-delay: 0.15s; }
-
-@keyframes run {
-  from { transform: rotate(20deg); }
-  to { transform: rotate(-20deg); }
+@keyframes dustFade {
+  from { 
+    transform: scale(0.5) translateX(0);
+    opacity: 0.6;
+  }
+  to { 
+    transform: scale(2) translateX(-20px);
+    opacity: 0;
+  }
 }
 
-/* Yay text */
+/* Yay celebration text */
 .yay {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(0.6);
-  font-size: 48px;
-  font-weight: 800;
-  letter-spacing: 2px;
+  transform: translate(-50%, -50%) scale(0.5);
+  font-size: 64px;
+  font-weight: 900;
+  letter-spacing: 4px;
   opacity: 0;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  background: linear-gradient(135deg, var(--accent), var(--accent-2), var(--accent));
+  background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: yayPop 1.2s ease forwards;
+  animation: yayPop 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+             shimmer 2s ease-in-out infinite;
   pointer-events: none;
+  text-shadow: 0 0 40px rgba(255,78,205,0.5);
+  z-index: 100;
 }
 
 @keyframes yayPop {
-  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
-  60% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
-  100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  0% { 
+    opacity: 0; 
+    transform: translate(-50%, -50%) scale(0.5) rotate(-10deg); 
+  }
+  60% { 
+    opacity: 1; 
+    transform: translate(-50%, -50%) scale(1.25) rotate(5deg); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translate(-50%, -50%) scale(1) rotate(0deg); 
+  }
 }
 
-/* Hearts */
+@keyframes shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Floating hearts */
 .heart {
   position: absolute;
   color: #ff4ecd;
-  animation: floatUp 3s ease-out forwards;
+  animation: floatUp 3.5s ease-out forwards;
   pointer-events: none;
-}
-@keyframes floatUp {
-  from { transform: translateY(0) scale(0.8); opacity: 1; }
-  to { transform: translateY(-140px) scale(1.4); opacity: 0; }
+  filter: drop-shadow(0 0 8px rgba(255,78,205,0.6));
 }
 
-/* Confetti dots */
+@keyframes floatUp {
+  from { 
+    transform: translateY(0) scale(0.7) rotate(0deg); 
+    opacity: 1; 
+  }
+  to { 
+    transform: translateY(-180px) scale(1.5) rotate(20deg); 
+    opacity: 0; 
+  }
+}
+
+/* Confetti particles */
 .confetti {
   position: absolute;
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  animation: confettiFall 2.5s ease-out forwards;
+  animation: confettiFall 3s ease-out forwards;
+  box-shadow: 0 0 8px currentColor;
 }
+
 @keyframes confettiFall {
-  from { transform: translateY(0); opacity: 1; }
-  to { transform: translateY(300px); opacity: 0; }
+  from { 
+    transform: translateY(0) rotate(0deg) scale(1); 
+    opacity: 1; 
+  }
+  to { 
+    transform: translateY(400px) rotate(720deg) scale(0.5); 
+    opacity: 0; 
+  }
+}
+
+/* Sparkle effect */
+.sparkle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: white;
+  border-radius: 50%;
+  animation: sparkleTwinkle 1.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes sparkleTwinkle {
+  0%, 100% { opacity: 0; transform: scale(0); }
+  50% { opacity: 1; transform: scale(1); }
 }
 </style>
 </head>
@@ -179,67 +399,240 @@ button {
 <body>
 
 <div class="glow"></div>
+<div class="glow-2"></div>
 
 <div class="card" id="card">
-  <h1>Valentine’s Day</h1>
-  <p>Will you go on a Comic Con date with me on Valentine’s Day?</p>
+  <h1>💝 Valentine's Day 💝</h1>
+  <p>Will you go on a Comic Con date with me on Valentine's Day?</p>
 
   <div class="buttons">
-    <button id="yesBtn">YES</button>
-    <button id="noBtn">NO</button>
+    <button id="yesBtn">YES! 💕</button>
+    <button id="noBtn">
+      <div class="wings">
+        <div class="wing left">🦋</div>
+        <div class="wing right">🦋</div>
+      </div>
+      <span class="button-body">NO</span>
+    </button>
   </div>
 </div>
 
 <script>
+// Create background particles
+for (let i = 0; i < 20; i++) {
+  const particle = document.createElement('div');
+  particle.className = 'particle';
+  particle.style.left = Math.random() * 100 + '%';
+  particle.style.top = Math.random() * 100 + '%';
+  particle.style.animationDelay = Math.random() * 8 + 's';
+  particle.style.animationDuration = (6 + Math.random() * 4) + 's';
+  document.body.appendChild(particle);
+}
+
+// Create sparkles around card
+setInterval(() => {
+  const card = document.getElementById('card');
+  const rect = card.getBoundingClientRect();
+  const sparkle = document.createElement('div');
+  sparkle.className = 'sparkle';
+  sparkle.style.left = (rect.left + Math.random() * rect.width) + 'px';
+  sparkle.style.top = (rect.top + Math.random() * rect.height) + 'px';
+  document.body.appendChild(sparkle);
+  setTimeout(() => sparkle.remove(), 1500);
+}, 300);
+
 const noBtn = document.getElementById("noBtn");
 const yesBtn = document.getElementById("yesBtn");
 const card = document.getElementById("card");
 
-/* NO escapes forever */
-function escape() {
-  const x = Math.random() * (window.innerWidth - 80);
-  const y = Math.random() * (window.innerHeight - 80);
-  noBtn.style.left = `${x}px`;
-  noBtn.style.top = `${y}px`;
-}
-noBtn.addEventListener("mouseenter", escape);
-noBtn.addEventListener("mousedown", escape);
-noBtn.addEventListener("touchstart", escape);
+let isFlying = false;
 
-/* YES celebration */
+// Create dust cloud effect
+function createDust(x, y) {
+  for (let i = 0; i < 3; i++) {
+    const dust = document.createElement('div');
+    dust.className = 'dust';
+    dust.style.left = x + (Math.random() * 20 - 10) + 'px';
+    dust.style.top = y + 10 + 'px';
+    document.body.appendChild(dust);
+    setTimeout(() => dust.remove(), 600);
+  }
+}
+
+// Check if position overlaps with card
+function overlapsWithCard(x, y, btnWidth, btnHeight) {
+  const cardRect = card.getBoundingClientRect();
+  const btnRect = {
+    left: x,
+    right: x + btnWidth,
+    top: y,
+    bottom: y + btnHeight
+  };
+  
+  // Add extra padding around card
+  const padding = 20;
+  
+  return !(btnRect.right < cardRect.left - padding ||
+           btnRect.left > cardRect.right + padding ||
+           btnRect.bottom < cardRect.top - padding ||
+           btnRect.top > cardRect.bottom + padding);
+}
+
+// Make NO button fly away while staying visible in viewport
+function flyAway() {
+  const btnWidth = noBtn.offsetWidth;
+  const btnHeight = noBtn.offsetHeight;
+  const padding = 40; // Safe padding from edges
+  
+  // Calculate safe bounds
+  const minX = padding;
+  const maxX = window.innerWidth - btnWidth - padding;
+  const minY = padding;
+  const maxY = window.innerHeight - btnHeight - padding;
+  
+  // Ensure we have valid bounds
+  if (maxX <= minX || maxY <= minY) {
+    return; // Screen too small
+  }
+  
+  let newX, newY;
+  let attempts = 0;
+  const maxAttempts = 20;
+  
+  // Try to find a position that doesn't overlap with card
+  do {
+    newX = minX + Math.random() * (maxX - minX);
+    newY = minY + Math.random() * (maxY - minY);
+    attempts++;
+  } while (overlapsWithCard(newX, newY, btnWidth, btnHeight) && attempts < maxAttempts);
+  
+  // If we couldn't find a non-overlapping position, place it far from card
+  if (attempts >= maxAttempts) {
+    const cardRect = card.getBoundingClientRect();
+    const cardCenterX = cardRect.left + cardRect.width / 2;
+    const cardCenterY = cardRect.top + cardRect.height / 2;
+    
+    // Place button on opposite side of screen from card
+    if (cardCenterX < window.innerWidth / 2) {
+      newX = Math.max(minX, window.innerWidth - btnWidth - padding);
+    } else {
+      newX = minX;
+    }
+    
+    if (cardCenterY < window.innerHeight / 2) {
+      newY = Math.max(minY, window.innerHeight - btnHeight - padding);
+    } else {
+      newY = minY;
+    }
+  }
+  
+  noBtn.classList.add('flying');
+  noBtn.style.left = newX + 'px';
+  noBtn.style.top = newY + 'px';
+  
+  // Create dust trail
+  const rect = noBtn.getBoundingClientRect();
+  createDust(rect.left + rect.width / 2, rect.top + rect.height);
+  
+  isFlying = true;
+}
+
+// Stop flying animation
+function stopFlying() {
+  isFlying = false;
+  noBtn.classList.remove('flying');
+}
+
+// Track mouse distance to NO button
+let chaseTimeout;
+
+document.addEventListener('mousemove', (e) => {
+  if (noBtn.style.display === 'none') return;
+  
+  const rect = noBtn.getBoundingClientRect();
+  const btnCenterX = rect.left + rect.width / 2;
+  const btnCenterY = rect.top + rect.height / 2;
+  
+  const distance = Math.sqrt(
+    Math.pow(e.clientX - btnCenterX, 2) + 
+    Math.pow(e.clientY - btnCenterY, 2)
+  );
+  
+  // Fly away when mouse gets close (150px radius)
+  if (distance < 150) {
+    flyAway();
+    
+    clearTimeout(chaseTimeout);
+    chaseTimeout = setTimeout(stopFlying, 800);
+  }
+});
+
+// Also fly on hover/touch
+noBtn.addEventListener("mouseenter", (e) => {
+  e.preventDefault();
+  flyAway();
+});
+
+noBtn.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+  flyAway();
+});
+
+// Prevent clicking
+noBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  flyAway();
+});
+
+noBtn.addEventListener("mousedown", (e) => {
+  e.preventDefault();
+  flyAway();
+});
+
+// YES button celebration
 yesBtn.addEventListener("click", () => {
   card.classList.add("success");
-  yesBtn.textContent = "Confirmed";
+  yesBtn.innerHTML = "✓ Confirmed!";
   yesBtn.disabled = true;
   noBtn.style.display = "none";
+  stopFlying();
 
-  // Yay text
+  // YAY text
   const yay = document.createElement("div");
   yay.className = "yay";
   yay.textContent = "YAY!";
   document.body.appendChild(yay);
+  setTimeout(() => yay.remove(), 3000);
 
-  // Hearts
-  for (let i = 0; i < 14; i++) {
-    const heart = document.createElement("div");
-    heart.className = "heart";
-    heart.textContent = "❤";
-    heart.style.left = Math.random() * 100 + "%";
-    heart.style.bottom = "20px";
-    heart.style.fontSize = 16 + Math.random() * 22 + "px";
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 3000);
+  // Floating hearts
+  for (let i = 0; i < 20; i++) {
+    setTimeout(() => {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.textContent = "❤️";
+      heart.style.left = 20 + Math.random() * 60 + "%";
+      heart.style.bottom = "10px";
+      heart.style.fontSize = 20 + Math.random() * 30 + "px";
+      heart.style.animationDelay = Math.random() * 0.5 + 's';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 3500);
+    }, i * 100);
   }
 
-  // Confetti
-  for (let i = 0; i < 30; i++) {
-    const c = document.createElement("div");
-    c.className = "confetti";
-    c.style.left = Math.random() * 100 + "%";
-    c.style.top = "0px";
-    c.style.background = Math.random() > 0.5 ? "#ff4ecd" : "#6cf2ff";
-    document.body.appendChild(c);
-    setTimeout(() => c.remove(), 2500);
+  // Confetti explosion
+  for (let i = 0; i < 50; i++) {
+    setTimeout(() => {
+      const c = document.createElement("div");
+      c.className = "confetti";
+      c.style.left = 30 + Math.random() * 40 + "%";
+      c.style.top = "20%";
+      const colors = ["#ff4ecd", "#6cf2ff", "#fff", "#ffd700", "#ff6b9d"];
+      c.style.background = colors[Math.floor(Math.random() * colors.length)];
+      c.style.animationDelay = Math.random() * 0.3 + 's';
+      c.style.animationDuration = 2 + Math.random() * 1.5 + 's';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 3500);
+    }, i * 40);
   }
 });
 </script>
