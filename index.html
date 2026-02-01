@@ -4,17 +4,12 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Valentine's Day</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Valentine</title>
 
 <style>
 :root {
   --accent: #ff4ecd;
   --accent-2: #6cf2ff;
   --glass: rgba(255,255,255,0.08);
-  --accent:#ff4ecd;
-  --accent2:#6cf2ff;
 }
 
 * { box-sizing: border-box; }
@@ -30,7 +25,6 @@ body {
   overflow: hidden;
   color: #fff;
 }
-* { box-sizing:border-box; }
 
 /* Optional visible fly zone */
 .fly-zone {
@@ -41,16 +35,6 @@ body {
   box-shadow: inset 0 0 40px rgba(108,242,255,0.08);
   pointer-events: none;
   z-index: 1;
-body{
-  margin:0;
-  height:100vh;
-  background:radial-gradient(circle at top,#1b1b2f,#050510 70%);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-family:system-ui;
-  overflow:hidden;
-  color:#fff;
 }
 
 .card {
@@ -63,14 +47,6 @@ body{
   border-radius: 28px;
   border: 1px solid rgba(255,255,255,0.2);
   text-align: center;
-.card{
-  padding:48px;
-  width:420px;
-  border-radius:28px;
-  background:rgba(255,255,255,.08);
-  backdrop-filter:blur(30px);
-  text-align:center;
-  z-index:2;
 }
 
 h1 {
@@ -79,11 +55,6 @@ h1 {
   background: linear-gradient(135deg, #fff, var(--accent-2));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-h1{
-  margin:0 0 12px;
-  background:linear-gradient(135deg,#fff,var(--accent2));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
 }
 
 p {
@@ -91,7 +62,6 @@ p {
   margin-bottom: 40px;
   opacity: 0.9;
 }
-p{ opacity:.9; margin-bottom:40px; }
 
 .buttons {
   position: relative;
@@ -99,10 +69,6 @@ p{ opacity:.9; margin-bottom:40px; }
   display: flex;
   gap: 20px;
   justify-content: center;
-.buttons{
-  display:flex;
-  gap:20px;
-  justify-content:center;
 }
 
 button {
@@ -112,21 +78,11 @@ button {
   border-radius: 16px;
   border: none;
   cursor: pointer;
-button{
-  padding:16px 36px;
-  border-radius:16px;
-  border:none;
-  font-size:17px;
-  font-weight:600;
-  cursor:pointer;
 }
 
 #yesBtn {
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
   color: #000;
-#yes{
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  color:#000;
 }
 
 #noBtn {
@@ -176,15 +132,6 @@ button{
 @keyframes flap {
   0%,100% { transform: translateY(-50%) rotate(-15deg); }
   50% { transform: translateY(-50%) rotate(-35deg); }
-#no{
-  background:rgba(255,255,255,.15);
-  color:#fff;
-  border:1px solid rgba(255,255,255,.25);
-  position:fixed;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  z-index:9999;
 }
 </style>
 </head>
@@ -195,8 +142,6 @@ button{
 
 <div class="card" id="card">
   <h1>💝 Valentine's Day 💝</h1>
-<div class="card">
-  <h1>💝 Valentine’s Day</h1>
   <p>Will you go on a Comic Con date with me?</p>
 
   <div class="buttons">
@@ -209,8 +154,6 @@ button{
       </div>
       NO
     </button>
-    <button id="yes">YES 💕</button>
-    <button id="no">NO</button>
   </div>
 </div>
 
@@ -236,16 +179,6 @@ function getSafeBounds() {
     maxX: Math.min(window.innerWidth - btnW - margin, centerX + radius),
     minY: Math.max(margin, centerY - radius),
     maxY: Math.min(window.innerHeight - btnH - margin, centerY + radius),
-const noBtn = document.getElementById("no");
-const yesBtn = document.getElementById("yes");
-
-const EDGE = 24;        // absolute safety margin
-const ESCAPE_RADIUS = 160;
-
-function viewport() {
-  return window.visualViewport || {
-    width: window.innerWidth,
-    height: window.innerHeight
   };
 }
 
@@ -258,82 +191,38 @@ function flyAway() {
     wings.classList.add("show");
     detached = true;
   }
-function clamp(val,min,max){
-  return Math.max(min,Math.min(max,val));
-}
-
-function fly() {
-  const vp = viewport();
-  const r = noBtn.getBoundingClientRect();
 
   const { minX, maxX, minY, maxY } = getSafeBounds();
-  const maxX = vp.width - r.width - EDGE;
-  const maxY = vp.height - r.height - EDGE;
 
   let x = minX + Math.random() * (maxX - minX);
   let y = minY + Math.random() * (maxY - minY);
-  let x = Math.random() * maxX;
-  let y = Math.random() * maxY;
 
   /* HARD CLAMP – cannot leave screen */
   x = Math.max(100, Math.min(window.innerWidth - noBtn.offsetWidth - 100, x));
   y = Math.max(100, Math.min(window.innerHeight - noBtn.offsetHeight - 100, y));
-  x = clamp(x, EDGE, maxX);
-  y = clamp(y, EDGE, maxY);
 
   noBtn.classList.add("flying");
   noBtn.style.left = x + "px";
   noBtn.style.top = y + "px";
-  noBtn.style.top  = y + "px";
-  noBtn.style.transform = "none";
 }
 
 /* Mouse + touch evasion */
-/* cursor proximity logic */
 document.addEventListener("mousemove", e => {
   const r = noBtn.getBoundingClientRect();
   const dx = e.clientX - (r.left + r.width / 2);
   const dy = e.clientY - (r.top + r.height / 2);
   if (Math.hypot(dx, dy) < 140) flyAway();
-  const dx = e.clientX - (r.left + r.width/2);
-  const dy = e.clientY - (r.top + r.height/2);
-  if (Math.hypot(dx,dy) < ESCAPE_RADIUS) fly();
 });
 
 ["mouseenter","mousedown","touchstart","click"].forEach(evt =>
   noBtn.addEventListener(evt, e => {
-/* touch + hover safety */
-["mouseenter","mousedown","touchstart","click"].forEach(evt=>{
-  noBtn.addEventListener(evt,e=>{
     e.preventDefault();
     flyAway();
   })
 );
-    fly();
-  });
-});
 
-/* FINAL GUARANTEE LOOP — cannot escape viewport */
-function enforceBounds(){
-  const vp = viewport();
-  const r = noBtn.getBoundingClientRect();
-
-  let x = r.left;
-  let y = r.top;
-
-  x = clamp(x, EDGE, vp.width - r.width - EDGE);
-  y = clamp(y, EDGE, vp.height - r.height - EDGE);
-
-  noBtn.style.left = x + "px";
-  noBtn.style.top  = y + "px";
-  requestAnimationFrame(enforceBounds);
-}
-enforceBounds();
-
-/* YES */
 yesBtn.onclick = () => {
   noBtn.style.display = "none";
-  noBtn.remove();
   yesBtn.textContent = "✓ Confirmed!";
   yesBtn.disabled = true;
 };
