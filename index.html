@@ -20,7 +20,7 @@ body {
   color: #fff;
 }
 
-/* HARD BOUNDARY */
+/* INNER HARD BORDER */
 .fly-zone {
   position: fixed;
   inset: 15%;
@@ -102,19 +102,36 @@ const yesBtn = document.getElementById("yes");
 const zone = document.getElementById("zone");
 
 const ESCAPE_DISTANCE = 140;
+let initialized = false;
 
 /* Utility */
 function clamp(v, min, max) {
   return Math.max(min, Math.min(max, v));
 }
 
-/* Get fly-zone bounds */
+/* Fly-zone bounds */
 function zoneBounds() {
   return zone.getBoundingClientRect();
 }
 
-/* Move NO button strictly inside fly-zone */
+/* INITIAL placement — CRITICAL */
+function placeInitially() {
+  const zb = zoneBounds();
+  const br = noBtn.getBoundingClientRect();
+
+  const x = zb.left + (zb.width - br.width) / 2;
+  const y = zb.top + (zb.height - br.height) / 2;
+
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+
+  initialized = true;
+}
+
+/* Move NO button inside border only */
 function fly() {
+  if (!initialized) return;
+
   const zb = zoneBounds();
   const br = noBtn.getBoundingClientRect();
 
@@ -139,8 +156,10 @@ function fly() {
   noBtn.style.top = y + "px";
 }
 
-/* Cursor proximity detection */
+/* Cursor proximity */
 document.addEventListener("mousemove", e => {
+  if (!initialized) return;
+
   const r = noBtn.getBoundingClientRect();
   const dx = e.clientX - (r.left + r.width / 2);
   const dy = e.clientY - (r.top + r.height / 2);
@@ -150,25 +169,26 @@ document.addEventListener("mousemove", e => {
   }
 });
 
-/* Absolute enforcement — cannot cross border */
+/* Absolute enforcement loop */
 function enforceZone() {
+  if (!initialized) {
+    requestAnimationFrame(enforceZone);
+    return;
+  }
+
   const zb = zoneBounds();
   const r = noBtn.getBoundingClientRect();
 
-  let x = r.left;
-  let y = r.top;
-
-  x = clamp(x, zb.left, zb.right - r.width);
-  y = clamp(y, zb.top, zb.bottom - r.height);
+  let x = clamp(r.left, zb.left, zb.right - r.width);
+  let y = clamp(r.top, zb.top, zb.bottom - r.height);
 
   noBtn.style.left = x + "px";
   noBtn.style.top = y + "px";
 
   requestAnimationFrame(enforceZone);
 }
-enforceZone();
 
-/* Block all attempts to click */
+/* Prevent clicking */
 ["mouseenter","mousedown","click","touchstart"].forEach(evt => {
   noBtn.addEventListener(evt, e => {
     e.preventDefault();
@@ -176,12 +196,18 @@ enforceZone();
   });
 });
 
-/* YES logic */
+/* YES */
 yesBtn.onclick = () => {
   noBtn.remove();
   yesBtn.textContent = "✓ Confirmed!";
   yesBtn.disabled = true;
 };
+
+/* Start */
+window.addEventListener("load", () => {
+  placeInitially();
+  enforceZone();
+});
 </script>
 
 </body>
